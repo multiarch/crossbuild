@@ -8,7 +8,7 @@ You can use this image to produce multiarch binairies.
 
 #### x86_64
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir multiarch/cross-build make helloworld
 cc helloworld.c -o helloworld
 $ file helloworld
@@ -17,13 +17,13 @@ helloworld: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically li
 
 Misc: using `cc` instead of `make`
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir multiarch/cross-build cc helloworld.c
 ```
 
 #### arm
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir -e CROSS_TRIPLE=arm-linux-gnueabi multiarch/cross-build make helloworld
 cc     helloworld.c   -o helloworld
 $ file helloworld
@@ -32,7 +32,7 @@ helloworld: ELF 32-bit LSB  executable, ARM, EABI5 version 1 (SYSV), dynamically
 
 #### powerpc 64-bit el
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir -e CROSS_TRIPLE=powerpc64le-linux-gnu multiarch/cross-build make helloworld
 cc     helloworld.c   -o helloworld
 $ file helloworld
@@ -42,7 +42,7 @@ ripped
 
 #### arm64
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir -e CROSS_TRIPLE=aarch64-linux-gnu multiarch/cross-build make helloworld
 cc     helloworld.c   -o helloworld
 $ file helloworld
@@ -51,7 +51,7 @@ helloworld: ELF 64-bit LSB  executable, ARM aarch64, version 1 (SYSV), dynamical
 
 #### mips el
 
-```command
+```console
 $ docker run --rm -v $(pwd):/workdir -e CROSS_TRIPLE=mipsel-linux-gnu multiarch/cross-build make helloworld
 cc     helloworld.c   -o helloworld
 $ file helloworld
