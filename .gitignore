@@ -1,0 +1,7 @@
+# dummy files
+*~
+.#*
+*#
+
+# binaries
+test/helloworld

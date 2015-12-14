@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -n "${CROSS_TRIPLE}" ]; then
+    if [ ! -d "/usr/${CROSS_TRIPLE}/bin" ]; then
+	echo "No such cross toolchain: '${CROSS_TRIPLE}'"
+	exit 1
+    fi
+    export CROSS_ROOT="/usr/${CROSS_TRIPLE}"
+    export LD_LIBRARY_PATH="/usr/x86_64-linux-gnu/${CROSS_TRIPLE}/lib:${LD_LIBRARY_PATH}"
+    export PATH="${CROSS_ROOT}/bin:${PATH}"
+fi
+
+exec $@
