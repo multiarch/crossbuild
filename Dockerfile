@@ -47,5 +47,7 @@ RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
     done;                                                                   \
     ls -la /usr/*-linux-*/bin
 
-ADD ./entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
+WORKDIR /workdir
+
+ADD ./entrypoint /entrypoint
