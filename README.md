@@ -18,7 +18,7 @@ helloworld: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically li
 Misc: using `cc` instead of `make`
 
 ```console
-$ docker run --rm -v $(pwd):/workdir multiarch/cross-build cc helloworld.c
+$ docker run --rm -v $(pwd):/workdir multiarch/cross-build cc test/helloworld.c
 ```
 
 #### arm
@@ -56,6 +56,24 @@ $ docker run --rm -v $(pwd):/workdir -e CROSS_TRIPLE=mipsel-linux-gnu multiarch/
 cc     helloworld.c   -o helloworld
 $ file helloworld
 helloworld: ELF 32-bit LSB  executable, MIPS, MIPS-II version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=d6b2f608a3c1a56b8b990be66eed0c41baaf97cd, not stripped
+```
+
+#### darwin i386
+
+```console
+$ docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=i386-apple-darwin  multiarch/cross-build make helloworld
+o32-clang     helloworld.c   -o helloworld
+$ file test/helloworld
+test/helloworld: Mach-O executable i386
+```
+
+#### darwin x86_64
+
+```console
+$ docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=x86_64-apple-darwin  multiarch/cross-build make helloworld
+o64-clang     helloworld.c   -o helloworld
+$ file helloworld
+helloworld: Mach-O 64-bit executable x86_64
 ```
 
 ## Credit
