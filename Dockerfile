@@ -11,14 +11,29 @@ RUN set -x; \
  && dpkg --add-architecture mipsel                     \
  && dpkg --add-architecture powerpc                    \
  && dpkg --add-architecture ppc64el                    \
- && apt-get update                                     \
- && apt-get install -y -q                              \
+ && apt-get update
+RUN apt-get install -y -q                              \
+        bc                                             \
+        binfmt-support                                 \
+        binutils-multiarch                             \
+        binutils-multiarch-dev                         \
+        build-essential                                \
+        clang                                          \
         crossbuild-essential-arm64                     \
         crossbuild-essential-armel                     \
         crossbuild-essential-armhf                     \
         crossbuild-essential-mipsel                    \
         crossbuild-essential-ppc64el                   \
-        g++-multilib                                   \
-        gcc-multilib                                   \
+        curl                                           \
+        devscripts                                     \
+        gdb                                            \
+        git-core                                       \
+        llvm                                           \
+        multistrap                                     \
+        python-software-properties                     \
+        software-properties-common                     \
+        subversion                                     \
+        wget                                           \
  && apt-get clean
-# FIXME: add mips and powerpc
+# FIXME: install gcc-multilib
+# FIXME: add mips and powerpc architectures
