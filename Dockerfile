@@ -69,6 +69,7 @@ RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
 
 
 # Image metadata
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/crossbuild"]
 WORKDIR /workdir
-ADD ./entrypoint /entrypoint
+ADD ./crossbuild /crossbuild
+
