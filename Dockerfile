@@ -30,13 +30,30 @@ RUN apt-get install -y -q                              \
         git-core                                       \
         llvm                                           \
         multistrap                                     \
+        patch                                          \
         python-software-properties                     \
         software-properties-common                     \
         subversion                                     \
         wget                                           \
+        xz-utils                                       \
  && apt-get clean
 # FIXME: install gcc-multilib
 # FIXME: add mips and powerpc architectures
+
+
+# Install osxcross
+ENV MACOSX_PATH "/root/OSXtoolchain"
+
+RUN mkdir ${MACOSX_PATH}                                    \
+ && cd ${MACOSX_PATH}                                       \
+ && git clone https://github.com/tpoechtrager/osxcross.git  \
+ && cd osxcross                                             \
+ && git checkout a845375e028d29b447439b0c65dea4a9b4d2b2f6
+
+ADD ./SDK ${MACOSX_PATH}/osxcross/tarballs
+
+RUN cd ${MACOSX_PATH}/osxcross               \
+ && (echo ""; echo ""; echo "") | ./build.sh
 
 ENV TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu
 
