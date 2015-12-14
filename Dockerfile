@@ -1,5 +1,6 @@
 FROM buildpack-deps:jessie-curl
 
+# Install deps
 RUN set -x; \
     echo deb http://emdebian.org/tools/debian/ jessie main > /etc/apt/sources.list.d/emdebian.list \
  && curl -sL http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - \
@@ -42,21 +43,19 @@ RUN apt-get install -y -q                              \
 
 
 # Install osxcross
-ENV MACOSX_PATH "/root/OSXtoolchain"
+ENV TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu \
+    MACOSX_PATH="/usr/OSXtoolchain"
 
-RUN mkdir ${MACOSX_PATH}                                    \
- && cd ${MACOSX_PATH}                                       \
- && git clone https://github.com/tpoechtrager/osxcross.git  \
- && cd osxcross                                             \
- && git checkout a845375e028d29b447439b0c65dea4a9b4d2b2f6
 
+# Install OSx cross-tools
+RUN mkdir -p "${MACOSX_PATH}"                                                                                                 \
+ && cd "${MACOSX_PATH}"                                                                                                       \
+ && git clone --single-branch --branch=a845375e028d29b447439b0c65dea4a9b4d2b2f6 https://github.com/tpoechtrager/osxcross.git  \
 ADD ./SDK ${MACOSX_PATH}/osxcross/tarballs
+RUN cd "${MACOSX_PATH}"/osxcross && yes "" | ./build.sh
 
-RUN cd ${MACOSX_PATH}/osxcross               \
- && (echo ""; echo ""; echo "") | ./build.sh
 
-ENV TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu
-
+# Create symlinks for triples
 RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
       for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do         \
         ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");  \
@@ -64,7 +63,8 @@ RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
     done;                                                                   \
     ls -la /usr/*-linux-*/bin
 
+
+# Image metadata
 ENTRYPOINT ["/entrypoint"]
 WORKDIR /workdir
-
 ADD ./entrypoint /entrypoint
