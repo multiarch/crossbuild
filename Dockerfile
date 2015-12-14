@@ -41,7 +41,7 @@ RUN apt-get install -y -q                              \
 ENV TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu
 
 RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
-      for bin in /etc/alternatives/$triple-*; do                            \
+      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do         \
         ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");  \
       done;                                                                 \
     done;                                                                   \
