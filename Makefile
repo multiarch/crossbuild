@@ -1,7 +1,6 @@
 IMAGE = multiarch/crossbuild:dev
 LINUX_TRIPLES = arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
-DARWIN_TRIPLES = x86_64-apple-darwin i386-apple-darwin
-# FIXME: handle x86_64h-apple-darwin14
+DARWIN_TRIPLES = x86_64-apple-darwin i386-apple-darwin x86_64h-apple-darwin
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
 
@@ -29,11 +28,11 @@ test: .built
 	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
 	# osxcross wrapper testing
-	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/osxcross/bin/i386-apple-darwin14-cc helloworld.c -o helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin $(IMAGE) /usr/osxcross/bin/i386-apple-darwin14-cc helloworld.c -o helloworld
 	file test/helloworld
-	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/i386-apple-darwin14/bin/cc helloworld.c -o helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin $(IMAGE) /usr/i386-apple-darwin14/bin/cc helloworld.c -o helloworld
 	file test/helloworld
-	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) cc helloworld.c -o helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin $(IMAGE) cc helloworld.c -o helloworld
 	file test/helloworld
 
 

@@ -44,7 +44,8 @@ RUN apt-get install -y -q                              \
 
 # Install OSx cross-tools
 ENV OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6  \
-    DARWIN_SDK_VERSION=10.10
+    DARWIN_SDK_VERSION=10.10                                    \
+    DARWIN_VERSION=14
 RUN mkdir -p "/tmp/osxcross"                                                                                   \
  && cd "/tmp/osxcross"                                                                                         \
  && curl -sLo osxcross.tar.gz "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REVISION}"  \
@@ -59,17 +60,17 @@ RUN mkdir -p "/tmp/osxcross"                                                    
 
 
 # Create symlinks for triples
-ENV LINUX_TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu  \
-    DARWIN_TRIPLES=x86_64h-apple-darwin14,x86_64-apple-darwin14,i386-apple-darwin14
-RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                       \
-      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do               \
-        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then  \
-          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");      \
-        fi;                                                                       \
-      done;                                                                       \
-    done
+ENV LINUX_TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu                  \
+    DARWIN_TRIPLES=x86_64h-apple-darwin${DARWIN_VERSION},x86_64-apple-darwin${DARWIN_VERSION},i386-apple-darwin${DARWIN_VERSION}
 COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
-RUN for triple in $(echo ${DARWIN_TRIPLES} | tr "," " "); do                                     \
+RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                      \
+      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                              \
+        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                 \
+          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");                     \
+        fi;                                                                                      \
+      done;                                                                                      \
+    done &&                                                                                      \
+    for triple in $(echo ${DARWIN_TRIPLES} | tr "," " "); do                                     \
       mkdir -p /usr/$triple/bin;                                                                 \
       for bin in /usr/osxcross/bin/$triple-*; do                                                 \
         ln /usr/bin/osxcross-wrapper /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");     \
