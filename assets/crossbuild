@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# set -x
+
+if [ -n "${CROSS_TRIPLE}" ]; then
+    export CROSS_ROOT="/usr/${CROSS_TRIPLE}"
+    export PATH="${CROSS_ROOT}/bin:${PATH}"
+    export LD_LIBRARY_PATH="/usr/x86_64-linux-gnu/${CROSS_TRIPLE}/lib:${LD_LIBRARY_PATH}"
+fi
+
+binary=$1
+shift
+
+if [ -f "${CROSS_ROOT}/bin/$binary" ]; then
+    binary="${CROSS_ROOT}/bin/$binary"
+fi
+
+exec "${binary}" $@

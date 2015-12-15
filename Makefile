@@ -1,22 +1,47 @@
-IMAGE = multiarch/cross-build
-TRIPLES = i386-apple-darwin x86_64-apple-darwin arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu i386-apple-darwin x86_64-apple-darwin
+IMAGE = multiarch/crossbuild:dev
+LINUX_TRIPLES = arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
+DARWIN_TRIPLES = x86_64-apple-darwin14 i386-apple-darwin14
+# FIXME: handle x86_64h-apple-darwin14
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
-build:
+
+all: build
+
+
+.PHONY: build
+build: .built
+
+
+.built: Dockerfile $(shell find ./assets/)
 	docker build -t $(IMAGE) .
+	docker inspect -f '{{.Id}}' $(IMAGE) > $@
 
 
-shell: build
-	docker run -it --rm $(IMAGE) /bin/bash
+.PHONY: shell
+shell: .built
+	docker run $(DOCKER_TEST_ARGS) $(IMAGE)
 
 
-testshell: build
-	docker run $(DOCKER_TEST_ARGS) --entrypoint=/bin/bash $(IMAGE)
-
-
-test: build
-	for triple in "" $(TRIPLES); do  \
-	  rm -f test/helloworld;      \
-	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make helloworld; \
-	  file test/helloworld; \
+.PHONY: test
+test: .built
+	# generic test
+	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES); do                         \
+	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
+	# osxcross wrapper testing
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/osxcross/bin/i386-apple-darwin14-cc helloworld.c -o helloworld
+	file test/helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/i386-apple-darwin14/bin/cc helloworld.c -o helloworld
+	file test/helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) cc helloworld.c -o helloworld
+	file test/helloworld
+
+
+.PHONY: clean
+clean:
+	@rm -f .built
+	@for cid in `docker ps | grep $(IMAGE) | awk '{print $$1}'`; do docker kill $$cid; done || true
+
+
+.PHONY: re
+re: clean all

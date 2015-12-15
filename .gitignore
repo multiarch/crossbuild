@@ -2,6 +2,7 @@
 *~
 .#*
 *#
+.built
 
 # binaries
 test/helloworld
