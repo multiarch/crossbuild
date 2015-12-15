@@ -85,6 +85,16 @@ $ file helloworld
 helloworld: Mach-O 64-bit executable x86_64
 ```
 
+## Using crossbuild in a Dockerfile
+
+```Dockerfile
+FROM multiarch/crossbuild
+RUN git clone https://github.com/bit-spark/objective-c-hello-world
+ENV CROSS_TRIPLE=x86_64-apple-darwin
+WORKDIR /workdir/objective-c-hello-world
+RUN crossbuild ./compile-all.sh
+```
+
 ## Credit
 
 This project is inspired by the [cross-compiler](https://github.com/steeve/cross-compiler) by the venerable [Steeve Morin](https://github.com/steeve)
