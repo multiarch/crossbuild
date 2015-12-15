@@ -2,6 +2,12 @@
 
 # set -x
 
+case "${CROSS_TRIPLE}" in
+    *-apple-darwin)
+	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}"
+	;;
+esac
+
 if [ -n "${CROSS_TRIPLE}" ]; then
     export CROSS_ROOT="/usr/${CROSS_TRIPLE}"
     export PATH="${CROSS_ROOT}/bin:${PATH}"
