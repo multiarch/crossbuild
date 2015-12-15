@@ -19,12 +19,7 @@ build: .built
 
 .PHONY: shell
 shell: .built
-	docker run -it --rm $(IMAGE) /bin/bash
-
-
-.PHONY: testshell
-testshell: .built
-	docker run $(DOCKER_TEST_ARGS) --entrypoint=/bin/bash $(IMAGE)
+	docker run $(DOCKER_TEST_ARGS) $(IMAGE)
 
 
 .PHONY: test
