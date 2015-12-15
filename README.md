@@ -4,6 +4,18 @@
 This is a multiarch Docker build environment image.
 You can use this image to produce multiarch binairies.
 
+## Supported targets
+
+         | linux | osx
+---------|-------|-----
+x86_64   |   X   |  X
+i386     |       |  X
+arm      |   X   |
+armhf    |   X   |
+mips     |   X   |
+powerpc  |   X   |
+x86_64h  |       |  X
+
 ## Using crossbuild
 
 #### x86_64
@@ -84,6 +96,19 @@ o64-clang     helloworld.c   -o helloworld
 $ file helloworld
 helloworld: Mach-O 64-bit executable x86_64
 ```
+
+## Target aliases
+
+Triple                 | Aliases
+-----------------------|---------------------------------
+x86_64-linux-gnu       | **(default)**, amd64, x86_64
+arm-linux-gnueabi      | arm, armv5
+arm-linux-gnueabihf    | armhf, armv7, armv7l
+mipsel-linux-gnu       | mips, mipsel
+powerpc64le-linux-gnu  | powerpc, powerpc64, powerpc64le
+x86_64-apple-darwin    | darwin, osx
+x86_64h-apple-darwin   |
+i386-apple-darwin      | 
 
 ## Using crossbuild in a Dockerfile
 
