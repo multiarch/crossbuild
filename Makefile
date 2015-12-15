@@ -1,6 +1,7 @@
 IMAGE = multiarch/crossbuild:dev
 LINUX_TRIPLES = arm-linux-gnueabihf arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
 DARWIN_TRIPLES = x86_64-apple-darwin i386-apple-darwin x86_64h-apple-darwin
+ALIAS_TRIPLES = arm armhf arm64 amd64 x86_64 mips mipsel powerpc powerpc64 powerpc64le
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
 
@@ -24,7 +25,8 @@ shell: .built
 .PHONY: test
 test: .built
 	# generic test
-	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES); do                         \
+	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES) $(ALIAS_TRIPLES); do        \
+	  echo input triple: $$triple;                                                  \
 	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
 	# osxcross wrapper testing
