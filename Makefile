@@ -1,4 +1,4 @@
-IMAGE = multiarch/cross-build
+IMAGE = multiarch/crossbuild:dev
 LINUX_TRIPLES = arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
 DARWIN_TRIPLES = x86_64-apple-darwin14 i386-apple-darwin14
 # FIXME: handle x86_64h-apple-darwin14
