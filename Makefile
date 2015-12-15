@@ -1,22 +1,44 @@
 IMAGE = multiarch/cross-build
-TRIPLES = i386-apple-darwin x86_64-apple-darwin arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu i386-apple-darwin x86_64-apple-darwin
+LINUX_TRIPLES = arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
+DARWIN_TRIPLES = x86_64-apple-darwin14 i386-apple-darwin14
+# FIXME: handle x86_64h-apple-darwin14
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
-build:
+
+all: build
+
+
+.PHONY: build
+build: .built
+
+
+.built: Dockerfile $(shell find ./assets/)
 	docker build -t $(IMAGE) .
+	docker inspect -f '{{.Id}}' $(IMAGE) > $@
 
 
-shell: build
+.PHONY: shell
+shell: .built
 	docker run -it --rm $(IMAGE) /bin/bash
 
 
-testshell: build
+.PHONY: testshell
+testshell: .built
 	docker run $(DOCKER_TEST_ARGS) --entrypoint=/bin/bash $(IMAGE)
 
 
-test: build
-	for triple in "" $(TRIPLES); do  \
-	  rm -f test/helloworld;      \
-	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make helloworld; \
-	  file test/helloworld; \
+.PHONY: test
+test: .built
+	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES); do                         \
+	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
+
+
+.PHONY: clean
+clean:
+	@rm -f .built
+	@for cid in `docker ps | grep crossbuild | awk '{print $$1}'`; do docker kill $cid; done || true
+
+
+.PHONY: re
+re: clean all
