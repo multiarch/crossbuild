@@ -42,34 +42,46 @@ RUN apt-get install -y -q                              \
 # FIXME: add mips and powerpc architectures
 
 
-# Install osxcross
-ENV TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu \
-    MACOSX_PATH="/usr/OSXtoolchain" \
-    OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6
-
-
-
 # Install OSx cross-tools
-RUN mkdir -p "${MACOSX_PATH}/osxcross"                                                                         \
- && cd "${MACOSX_PATH}/osxcross"                                                                               \
+ENV OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6  \
+    DARWIN_SDK_VERSION=10.10
+RUN mkdir -p "/tmp/osxcross"                                                                                   \
+ && cd "/tmp/osxcross"                                                                                         \
  && curl -sLo osxcross.tar.gz "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REVISION}"  \
  && tar --strip=1 -xzf osxcross.tar.gz                                                                         \
- && rm -f osxcross.tar.gz
-ADD ./osx_SDK ${MACOSX_PATH}/osxcross/tarballs
-RUN cd "${MACOSX_PATH}"/osxcross && yes "" | ./build.sh
+ && rm -f osxcross.tar.gz                                                                                      \
+ && curl -sLo tarballs/MacOSX${DARWIN_SDK_VERSION}.sdk.tar.xz                                                  \
+        "https://www.dropbox.com/s/yfbesd249w10lpc/MacOSX${DARWIN_SDK_VERSION}.sdk.tar.xz"                     \
+ && yes "" | SDK_VERSION="${DARWIN_SDK_VERSION}" OSX_VERSION_MIN=10.6 ./build.sh                               \
+ && mv target /usr/osxcross                                                                                    \
+ && rm -rf /tmp/osxcross
 
 
 # Create symlinks for triples
-RUN for triple in $(echo ${TRIPLES} | tr "," " "); do                       \
-      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do         \
-        ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");  \
-      done;                                                                 \
-    done;                                                                   \
-    ls -la /usr/*-linux-*/bin
+ENV LINUX_TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu  \
+    DARWIN_TRIPLES=x86_64h-apple-darwin14,x86_64-apple-darwin14,i386-apple-darwin14
+RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                       \
+      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do               \
+        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then  \
+          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");      \
+        fi;                                                                       \
+      done;                                                                       \
+    done
+COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
+RUN for triple in $(echo ${DARWIN_TRIPLES} | tr "," " "); do                                     \
+      mkdir -p /usr/$triple/bin;                                                                 \
+      for bin in /usr/osxcross/bin/$triple-*; do                                                 \
+        ln /usr/bin/osxcross-wrapper /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");     \
+      done &&                                                                                    \
+      rm -f /usr/$triple/bin/clang*;                                                             \
+    done
+# we need to use default clang binary to avoid a bug in osxcross that recursively call himself
+# with more and more parameters
 
 
 # Image metadata
-ENTRYPOINT ["/crossbuild"]
+ENTRYPOINT ["/usr/bin/crossbuild"]
+CMD ["/bin/bash"]
 WORKDIR /workdir
-ADD ./crossbuild /crossbuild
+COPY ./assets/crossbuild /usr/bin/crossbuild
 

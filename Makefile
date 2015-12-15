@@ -29,15 +29,23 @@ testshell: .built
 
 .PHONY: test
 test: .built
+	# generic test
 	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES); do                         \
 	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
+	# osxcross wrapper testing
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/osxcross/bin/i386-apple-darwin14-cc helloworld.c -o helloworld
+	file test/helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) /usr/i386-apple-darwin14/bin/cc helloworld.c -o helloworld
+	file test/helloworld
+	docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=i386-apple-darwin14 $(IMAGE) cc helloworld.c -o helloworld
+	file test/helloworld
 
 
 .PHONY: clean
 clean:
 	@rm -f .built
-	@for cid in `docker ps | grep crossbuild | awk '{print $$1}'`; do docker kill $cid; done || true
+	@for cid in `docker ps | grep $(IMAGE) | awk '{print $$1}'`; do docker kill $$cid; done || true
 
 
 .PHONY: re
