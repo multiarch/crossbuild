@@ -76,6 +76,7 @@ RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                     
         ln /usr/bin/osxcross-wrapper /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");     \
       done &&                                                                                    \
       rm -f /usr/$triple/bin/clang*;                                                             \
+      ln -s cc /usr/$triple/bin/gcc;                                                             \
     done
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
