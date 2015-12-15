@@ -42,6 +42,11 @@ RUN apt-get install -y -q                              \
 # FIXME: add mips and powerpc architectures
 
 
+# Install Windows cross-tools
+RUN apt-get install -y mingw-w64 \
+ && apt-get clean
+
+
 # Install OSx cross-tools
 ENV OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6  \
     DARWIN_SDK_VERSION=10.10                                    \
@@ -61,22 +66,34 @@ RUN mkdir -p "/tmp/osxcross"                                                    
 
 # Create symlinks for triples
 ENV LINUX_TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu                  \
-    DARWIN_TRIPLES=x86_64h-apple-darwin${DARWIN_VERSION},x86_64-apple-darwin${DARWIN_VERSION},i386-apple-darwin${DARWIN_VERSION}
+    DARWIN_TRIPLES=x86_64h-apple-darwin${DARWIN_VERSION},x86_64-apple-darwin${DARWIN_VERSION},i386-apple-darwin${DARWIN_VERSION}  \
+    WINDOWS_TRIPLES=i686-w64-mingw32,x86_64-w64-mingw32
 COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
-RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                      \
-      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                              \
-        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                 \
-          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");                     \
-        fi;                                                                                      \
-      done;                                                                                      \
-    done &&                                                                                      \
-    for triple in $(echo ${DARWIN_TRIPLES} | tr "," " "); do                                     \
-      mkdir -p /usr/$triple/bin;                                                                 \
-      for bin in /usr/osxcross/bin/$triple-*; do                                                 \
-        ln /usr/bin/osxcross-wrapper /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");     \
-      done &&                                                                                    \
-      rm -f /usr/$triple/bin/clang*;                                                             \
-      ln -s cc /usr/$triple/bin/gcc;                                                             \
+RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                       \
+      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                               \
+        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                  \
+          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");                      \
+        fi;                                                                                       \
+      done;                                                                                       \
+    done &&                                                                                       \
+    for triple in $(echo ${DARWIN_TRIPLES} | tr "," " "); do                                      \
+      mkdir -p /usr/$triple/bin;                                                                  \
+      for bin in /usr/osxcross/bin/$triple-*; do                                                  \
+        ln /usr/bin/osxcross-wrapper /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");      \
+      done &&                                                                                     \
+      rm -f /usr/$triple/bin/clang*;                                                              \
+      ln -s cc /usr/$triple/bin/gcc;                                                              \
+      ln -s /usr/osxcross/SDK/MacOSX${DARWIN_SDK_VERSION}.sdk/usr /usr/x86_64-linux-gnu/$triple;  \
+    done;                                                                                         \
+    for triple in $(echo ${WINDOWS_TRIPLES} | tr "," " "); do                                     \
+      mkdir -p /usr/$triple/bin;                                                                  \
+      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                               \
+        if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                  \
+          ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");                      \
+        fi;                                                                                       \
+      done;                                                                                       \
+      ln -s gcc /usr/$triple/bin/cc;                                                              \
+      ln -s /usr/$triple /usr/x86_64-linux-gnu/$triple;                                           \
     done
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
