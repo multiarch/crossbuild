@@ -23,6 +23,9 @@ case "${CROSS_TRIPLE}" in
     *-apple-darwin)
 	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}"
 	;;
+    windows)
+	CROSS_TRIPLE="x86_64-w64-mingw32"
+	;;
     x86_64|amd64)
 	unset CROSS_TRIPLE
 	;;

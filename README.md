@@ -6,15 +6,15 @@ You can use this image to produce multiarch binairies.
 
 ## Supported targets
 
-         | linux | osx
----------|-------|-----
-x86_64   |   X   |  X
-i386     |       |  X
-arm      |   X   |
-armhf    |   X   |
-mips     |   X   |
-powerpc  |   X   |
-x86_64h  |       |  X
+         | linux | osx | windows
+---------|-------|-----|--------
+x86_64   |   X   |  X  |   X
+i386     |       |  X  |   X
+arm      |   X   |     |
+armhf    |   X   |     |
+mips     |   X   |     |
+powerpc  |   X   |     |
+x86_64h  |       |  X  |
 
 ## Using crossbuild
 
@@ -97,6 +97,24 @@ $ file helloworld
 helloworld: Mach-O 64-bit executable x86_64
 ```
 
+#### windows i386
+
+```console
+$ docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=i686-w64-mingw32  multiarch/crossbuild make helloworld
+o32-clang     helloworld.c   -o helloworld
+$ file helloworld
+helloworld: PE32 executable (console) Intel 80386, for MS Windows
+```
+
+#### windows x86_64
+
+```console
+$ docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=x86_64-w64-mingw32  multiarch/crossbuild make helloworld
+o64-clang     helloworld.c   -o helloworld
+$ file helloworld
+helloworld: PE32+ executable (console) x86-64, for MS Windows
+```
+
 ## Target aliases
 
 Triple                 | Aliases
@@ -109,6 +127,8 @@ powerpc64le-linux-gnu  | powerpc, powerpc64, powerpc64le
 x86_64-apple-darwin    | darwin, osx
 x86_64h-apple-darwin   |
 i386-apple-darwin      | 
+x86_64-w64-mingw32     | windows
+i686-w64-mingw32       |
 
 ## Using crossbuild in a Dockerfile
 
