@@ -36,6 +36,11 @@ test: .built
 	file test/helloworld
 
 
+.PHONY: test-inheritance
+test-inheritance: .built
+	docker build -t multiarch/crossbuild-test:objective-c-hello-world test/objective-c-hello-world
+
+
 .PHONY: clean
 clean:
 	@rm -f .built
