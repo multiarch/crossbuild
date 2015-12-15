@@ -25,7 +25,8 @@ shell: .built
 .PHONY: test
 test: .built
 	# generic test
-	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES); do                         \
+	for triple in "" $(DARWIN_TRIPLES) $(LINUX_TRIPLES) $(ALIAS_TRIPLES); do        \
+	  echo input triple: $$triple;                                                  \
 	  docker run $(DOCKER_TEST_ARGS) -e CROSS_TRIPLE=$$triple $(IMAGE) make test;   \
 	done
 	# osxcross wrapper testing
