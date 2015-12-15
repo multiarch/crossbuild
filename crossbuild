@@ -2,7 +2,7 @@
 
 if [ -n "${CROSS_TRIPLE}" ]; then
 	if [ "${CROSS_TRIPLE#*$apple-darwin}" != "${CROSS_TRIPLE}" ]; then
-		export CROSS_ROOT="/root/OSXtoolchain/osxcross/target"
+		export CROSS_ROOT="${MACOSX_PATH}/osxcross/target"
 		export PATH="${CROSS_ROOT}/bin:${PATH}"
 		if [ "${CROSS_TRIPLE}" = "i386-apple-darwin" ]; then
 			export CC=o32-clang

@@ -63,8 +63,8 @@ helloworld: ELF 32-bit LSB  executable, MIPS, MIPS-II version 1 (SYSV), dynamica
 ```console
 $ docker run -it --rm -v $(pwd):/workdir -e CROSS_TRIPLE=i386-apple-darwin  multiarch/cross-build make helloworld
 o32-clang     helloworld.c   -o helloworld
-$ file test/helloworld
-test/helloworld: Mach-O executable i386
+$ file helloworld
+helloworld: Mach-O executable i386
 ```
 
 #### darwin x86_64
