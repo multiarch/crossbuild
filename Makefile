@@ -1,6 +1,6 @@
 IMAGE = multiarch/crossbuild:dev
 LINUX_TRIPLES = arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu
-DARWIN_TRIPLES = x86_64-apple-darwin14 i386-apple-darwin14
+DARWIN_TRIPLES = x86_64-apple-darwin i386-apple-darwin
 # FIXME: handle x86_64h-apple-darwin14
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
@@ -40,7 +40,7 @@ test: .built
 .PHONY: clean
 clean:
 	@rm -f .built
-	@for cid in `docker ps | grep $(IMAGE) | awk '{print $$1}'`; do docker kill $$cid; done || true
+	@for cid in `docker ps | grep crossbuild | awk '{print $$1}'`; do docker kill $$cid; done || true
 
 
 .PHONY: re
