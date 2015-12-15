@@ -1,24 +1,51 @@
 #!/bin/sh
 
-# set -x
-
+# alternative names mapping
 case "${CROSS_TRIPLE}" in
+    arm)
+	CROSS_TRIPLE="arm-linux-gnueabi"
+	;;
+    armhf)
+	CROSS_TRIPLE="arm-linux-gnueabihf"
+	;;
+    mipsel|mips)
+	CROSS_TRIPLE="mipsel-linux-gnu"
+	;;
+    arm64|aarch64)
+	CROSS_TRIPLE="aarch64-linux-gnu"
+	;;
+    powerpc64le|powerpc64|powerpc)
+	CROSS_TRIPLE="powerpc64le-linux-gnu"
+	;;
+    darwin)
+	CROSS_TRIPLE="x86_64-apple-darwin${DARWIN_VERSION}"
+	;;
     *-apple-darwin)
 	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}"
 	;;
+    x86_64|amd64)
+	unset CROSS_TRIPLE
+	;;
+    i386|i386-linux-gnu)
+	echo "i386-linux-gnu not yet implemented."
+	exit 1
+	;;
 esac
 
+# configure environment
 if [ -n "${CROSS_TRIPLE}" ]; then
     export CROSS_ROOT="/usr/${CROSS_TRIPLE}"
     export PATH="${CROSS_ROOT}/bin:${PATH}"
     export LD_LIBRARY_PATH="/usr/x86_64-linux-gnu/${CROSS_TRIPLE}/lib:${LD_LIBRARY_PATH}"
 fi
 
+# try to exec direct binary instead on relying on the $PATH
 binary=$1
 shift
-
-if [ -f "${CROSS_ROOT}/bin/$binary" ]; then
+if [ -n "${CROSS_TRIPLE}" -a -f "${CROSS_ROOT}/bin/$binary" ]; then
     binary="${CROSS_ROOT}/bin/$binary"
 fi
 
+# finally exec
 exec "${binary}" $@
+exit $?
