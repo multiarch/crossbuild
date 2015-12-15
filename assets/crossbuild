@@ -2,10 +2,10 @@
 
 # alternative names mapping
 case "${CROSS_TRIPLE}" in
-    arm)
+    arm|armv5)
 	CROSS_TRIPLE="arm-linux-gnueabi"
 	;;
-    armhf)
+    armhf|armv7|armv7l)
 	CROSS_TRIPLE="arm-linux-gnueabihf"
 	;;
     mipsel|mips)
@@ -17,7 +17,7 @@ case "${CROSS_TRIPLE}" in
     powerpc64le|powerpc64|powerpc)
 	CROSS_TRIPLE="powerpc64le-linux-gnu"
 	;;
-    darwin)
+    darwin|osx)
 	CROSS_TRIPLE="x86_64-apple-darwin${DARWIN_VERSION}"
 	;;
     *-apple-darwin)
