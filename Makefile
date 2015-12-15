@@ -1,5 +1,5 @@
 IMAGE = multiarch/cross-build
-TRIPLES = i386-apple-darwin x86_64-apple-darwin arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu 
+TRIPLES = i386-apple-darwin x86_64-apple-darwin arm-linux-gnueabi powerpc64le-linux-gnu aarch64-linux-gnu arm-linux-gnueabihf mipsel-linux-gnu i386-apple-darwin x86_64-apple-darwin
 DOCKER_TEST_ARGS ?= -it --rm -v $(shell pwd)/test:/test -w /test
 
 build:
