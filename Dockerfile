@@ -54,7 +54,8 @@ RUN mkdir -p "/tmp/osxcross"                                                    
         "https://www.dropbox.com/s/yfbesd249w10lpc/MacOSX${DARWIN_SDK_VERSION}.sdk.tar.xz"                     \
  && yes "" | SDK_VERSION="${DARWIN_SDK_VERSION}" OSX_VERSION_MIN=10.6 ./build.sh                               \
  && mv target /usr/osxcross                                                                                    \
- && rm -rf /tmp/osxcross
+ && rm -rf /tmp/osxcross                                                                                       \
+ && rm -rf /usr/osxcross/SDK/MacOSX10.10.sdk/usr/share/man
 
 
 # Create symlinks for triples
