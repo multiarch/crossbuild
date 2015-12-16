@@ -30,6 +30,7 @@ RUN apt-get install -y -q                              \
         gdb                                            \
         git-core                                       \
         llvm                                           \
+        mercurial                                      \
         multistrap                                     \
         patch                                          \
         python-software-properties                     \
