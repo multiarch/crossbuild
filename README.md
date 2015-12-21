@@ -144,6 +144,13 @@ RUN crossbuild ./compile-all.sh
 
 This project is inspired by the [cross-compiler](https://github.com/steeve/cross-compiler) by the venerable [Steeve Morin](https://github.com/steeve)
 
+## Legal note
+
+OSX/Darwin/Apple builds: 
+**[Please ensure you have read and understood the Xcode license
+   terms before continuing.](https://www.apple.com/legal/sla/docs/xcode.pdf)**
+
+
 ## License
 
 MIT
