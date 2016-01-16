@@ -2,37 +2,32 @@
 
 # alternative names mapping
 case "${CROSS_TRIPLE}" in
+    linux|x86_64|amd64)
+	CROSS_TRIPLE="x86_64-linux-gnu" ;;
     arm|armv5)
-	CROSS_TRIPLE="arm-linux-gnueabi"
-	;;
+	CROSS_TRIPLE="arm-linux-gnueabi" ;;
     armhf|armv7|armv7l)
-	CROSS_TRIPLE="arm-linux-gnueabihf"
-	;;
-    mipsel|mips)
-	CROSS_TRIPLE="mipsel-linux-gnu"
-	;;
+	CROSS_TRIPLE="arm-linux-gnueabihf" ;;
     arm64|aarch64)
-	CROSS_TRIPLE="aarch64-linux-gnu"
-	;;
-    powerpc64le|powerpc64|powerpc)
-	CROSS_TRIPLE="powerpc64le-linux-gnu"
-	;;
-    darwin|osx)
-	CROSS_TRIPLE="x86_64-apple-darwin${DARWIN_VERSION}"
-	;;
+	CROSS_TRIPLE="aarch64-linux-gnu" ;;
+    mips|mipsel)
+	CROSS_TRIPLE="mipsel-linux-gnu" ;;
+    powerpc|powerpc64|powerpc64le)
+	CROSS_TRIPLE="powerpc64le-linux-gnu" ;;
+    osx|osx64|darwin|darwin64)
+	CROSS_TRIPLE="x86_64-apple-darwin${DARWIN_VERSION}" ;;
+    osx64h|darwin64h|x86_64h)
+	CROSS_TRIPLE="x86_64h-apple-darwin${DARWIN_VERSION}" ;;
+    osx32|darwin32)
+	CROSS_TRIPLE="i386-apple-darwin${DARWIN_VERSION}" ;;
     *-apple-darwin)
-	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}"
-	;;
-    windows)
-	CROSS_TRIPLE="x86_64-w64-mingw32"
-	;;
-    x86_64|amd64)
-	unset CROSS_TRIPLE
-	;;
+	CROSS_TRIPLE="${CROSS_TRIPLE}${DARWIN_VERSION}" ;;
+    windows|win64)
+	CROSS_TRIPLE="x86_64-w64-mingw32" ;;
+    win32)
+	CROSS_TRIPLE="i686-w64-mingw32" ;;
     i386|i386-linux-gnu)
-	echo "i386-linux-gnu not yet implemented."
-	exit 1
-	;;
+	echo "i386-linux-gnu not yet implemented." && exit 1 ;;
 esac
 
 # store original PATH and LD_LIBRARY_PATH
