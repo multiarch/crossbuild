@@ -1,6 +1,8 @@
 # crossbuild
 :earth_africa: multiarch cross compiling environments
 
+![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
+
 This is a multiarch Docker build environment image.
 You can use this image to produce multiarch binairies.
 
