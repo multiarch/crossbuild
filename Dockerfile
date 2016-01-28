@@ -38,6 +38,7 @@ RUN apt-get install -y -q                              \
         subversion                                     \
         wget                                           \
         xz-utils                                       \
+        cmake                                          \
  && apt-get clean
 # FIXME: install gcc-multilib
 # FIXME: add mips and powerpc architectures
