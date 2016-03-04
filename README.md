@@ -133,6 +133,12 @@ WORKDIR /workdir/objective-c-hello-world
 RUN crossbuild ./compile-all.sh
 ```
 
+## Projects using **crossbuild**
+
+* [scaleway/initrd](https://github.com/scaleway/initrd)
+* [multiarch/build-xnbd-client-static](https://github.com/multiarch/build-xnbd-client-static/)
+* [tencherry10/til](https://github.com/tencherry10/til)
+
 ## Credit
 
 This project is inspired by the [cross-compiler](https://github.com/steeve/cross-compiler) by the venerable [Steeve Morin](https://github.com/steeve)
