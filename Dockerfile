@@ -1,4 +1,5 @@
 FROM buildpack-deps:jessie-curl
+MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
 RUN set -x; \
