@@ -1,4 +1,5 @@
 FROM buildpack-deps:jessie-curl
+MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
 RUN set -x; \
@@ -53,6 +54,7 @@ RUN apt-get install -y mingw-w64 \
 ENV OSXCROSS_REVISION=a845375e028d29b447439b0c65dea4a9b4d2b2f6  \
     DARWIN_SDK_VERSION=10.10                                    \
     DARWIN_VERSION=14
+
 RUN mkdir -p "/tmp/osxcross"                                                                                   \
  && cd "/tmp/osxcross"                                                                                         \
  && curl -sLo osxcross.tar.gz "https://codeload.github.com/tpoechtrager/osxcross/tar.gz/${OSXCROSS_REVISION}"  \
@@ -66,10 +68,11 @@ RUN mkdir -p "/tmp/osxcross"                                                    
  && rm -rf /usr/osxcross/SDK/MacOSX10.10.sdk/usr/share/man
 
 
-# Create symlinks for triples
-ENV LINUX_TRIPLES=arm-linux-gnueabi,powerpc64le-linux-gnu,aarch64-linux-gnu,arm-linux-gnueabihf,mipsel-linux-gnu                  \
+# Create symlinks for triples and set default CROSS_TRIPLE
+ENV LINUX_TRIPLES=arm-linux-gnueabi,arm-linux-gnueabihf,aarch64-linux-gnu,mipsel-linux-gnu,powerpc64le-linux-gnu                  \
     DARWIN_TRIPLES=x86_64h-apple-darwin${DARWIN_VERSION},x86_64-apple-darwin${DARWIN_VERSION},i386-apple-darwin${DARWIN_VERSION}  \
-    WINDOWS_TRIPLES=i686-w64-mingw32,x86_64-w64-mingw32
+    WINDOWS_TRIPLES=i686-w64-mingw32,x86_64-w64-mingw32                                                                           \
+    CROSS_TRIPLE=x86_64-linux-gnu
 COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
 RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                       \
       for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                               \
