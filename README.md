@@ -1,6 +1,8 @@
 # crossbuild
 :earth_africa: multiarch cross compiling environments
 
+[![Build Status](https://travis-ci.org/multiarch/crossbuild.svg?branch=master)](https://travis-ci.org/multiarch/crossbuild)
+
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
 This is a multiarch Docker build environment image.
