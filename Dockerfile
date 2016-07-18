@@ -64,6 +64,10 @@ RUN mkdir -p "/tmp/osxcross"                                                    
         "https://www.dropbox.com/s/yfbesd249w10lpc/MacOSX${DARWIN_SDK_VERSION}.sdk.tar.xz"                     \
  && yes "" | SDK_VERSION="${DARWIN_SDK_VERSION}" OSX_VERSION_MIN=10.6 ./build.sh                               \
  && mv target /usr/osxcross                                                                                    \
+ && mv tools /usr/osxcross/                                                                                    \
+ && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/omp                                                    \
+ && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/osxcross-macports                                      \
+ && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/osxcross-mp                                            \
  && rm -rf /tmp/osxcross                                                                                       \
  && rm -rf /usr/osxcross/SDK/MacOSX10.10.sdk/usr/share/man
 
