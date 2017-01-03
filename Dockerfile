@@ -40,6 +40,7 @@ RUN apt-get install -y -q                              \
         wget                                           \
         xz-utils                                       \
         cmake                                          \
+        qemu-user-static                               \
  && apt-get clean
 # FIXME: install gcc-multilib
 # FIXME: add mips and powerpc architectures
