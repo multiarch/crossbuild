@@ -13,8 +13,8 @@ RUN set -x; \
  && dpkg --add-architecture mipsel                     \
  && dpkg --add-architecture powerpc                    \
  && dpkg --add-architecture ppc64el                    \
- && apt-get update
-RUN apt-get install -y -q                              \
+ && apt-get update                                     \
+ && apt-get install -y -q                              \
         bc                                             \
         binfmt-support                                 \
         binutils-multiarch                             \
