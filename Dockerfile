@@ -15,6 +15,9 @@ RUN set -x; \
  && dpkg --add-architecture ppc64el                    \
  && apt-get update                                     \
  && apt-get install -y -q                              \
+        autoconf                                       \
+        automake                                       \
+        autotools-dev                                  \
         bc                                             \
         binfmt-support                                 \
         binutils-multiarch                             \
@@ -30,6 +33,7 @@ RUN set -x; \
         devscripts                                     \
         gdb                                            \
         git-core                                       \
+        libtool                                        \
         llvm                                           \
         mercurial                                      \
         multistrap                                     \
