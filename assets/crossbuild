@@ -51,5 +51,5 @@ if [ -n "${CROSS_TRIPLE}" -a -f "${CROSS_ROOT}/bin/$binary" ]; then
 fi
 
 # finally exec
-exec "${binary}" $@
+exec "${binary}" "$@"
 exit $?
