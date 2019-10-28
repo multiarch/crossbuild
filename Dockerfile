@@ -1,11 +1,9 @@
-FROM buildpack-deps:jessie-curl
+FROM buildpack-deps:stretch-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
 RUN set -x; \
-    echo deb http://emdebian.org/tools/debian/ jessie main > /etc/apt/sources.list.d/emdebian.list \
- && curl -sL http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - \
- && dpkg --add-architecture arm64                      \
+    dpkg --add-architecture arm64                      \
  && dpkg --add-architecture armel                      \
  && dpkg --add-architecture armhf                      \
  && dpkg --add-architecture i386                       \
@@ -38,8 +36,6 @@ RUN set -x; \
         mercurial                                      \
         multistrap                                     \
         patch                                          \
-        python-software-properties                     \
-        software-properties-common                     \
         subversion                                     \
         wget                                           \
         xz-utils                                       \
@@ -59,7 +55,7 @@ RUN apt-get install -y mingw-w64 \
 
 #Build arguments
 ARG osxcross_repo="tpoechtrager/osxcross"
-ARG osxcross_revision="a845375e028d29b447439b0c65dea4a9b4d2b2f6"
+ARG osxcross_revision="d6acb50babc2904ccc1e473723f2551ad211e6ea"
 ARG darwin_sdk_version="10.10"
 ARG darwin_osx_version_min="10.6"
 ARG darwin_version="14"
