@@ -1,10 +1,8 @@
-FROM buildpack-deps:jessie-curl
+FROM buildpack-deps:stretch-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
-RUN set -x; \
-    echo deb http://emdebian.org/tools/debian/ jessie main > /etc/apt/sources.list.d/emdebian.list \
- && curl -sL http://emdebian.org/tools/debian/emdebian-toolchain-archive.key | apt-key add - \
+RUN set -x; echo "Starting image build for Debian Stretch" \
  && dpkg --add-architecture arm64                      \
  && dpkg --add-architecture armel                      \
  && dpkg --add-architecture armhf                      \
@@ -38,13 +36,16 @@ RUN set -x; \
         mercurial                                      \
         multistrap                                     \
         patch                                          \
-        python-software-properties                     \
         software-properties-common                     \
         subversion                                     \
         wget                                           \
         xz-utils                                       \
         cmake                                          \
         qemu-user-static                               \
+        libxml2-dev                                    \
+        lzma-dev                                       \
+        openssl                                        \
+        libssl-dev                                     \
  && apt-get clean
 # FIXME: install gcc-multilib
 # FIXME: add mips and powerpc architectures
@@ -59,7 +60,7 @@ RUN apt-get install -y mingw-w64 \
 
 #Build arguments
 ARG osxcross_repo="tpoechtrager/osxcross"
-ARG osxcross_revision="a845375e028d29b447439b0c65dea4a9b4d2b2f6"
+ARG osxcross_revision="542acc2ef6c21aeb3f109c03748b1015a71fed63"
 ARG darwin_sdk_version="10.10"
 ARG darwin_osx_version_min="10.6"
 ARG darwin_version="14"
@@ -96,10 +97,16 @@ ENV LINUX_TRIPLES=arm-linux-gnueabi,arm-linux-gnueabihf,aarch64-linux-gnu,mipsel
     WINDOWS_TRIPLES=i686-w64-mingw32,x86_64-w64-mingw32                                                                           \
     CROSS_TRIPLE=x86_64-linux-gnu
 COPY ./assets/osxcross-wrapper /usr/bin/osxcross-wrapper
-RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                       \
-      for bin in /etc/alternatives/$triple-* /usr/bin/$triple-*; do                               \
+RUN mkdir -p /usr/x86_64-linux-gnu;                                                               \
+    for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                                       \
+      for bin in /usr/bin/$triple-*; do                                                           \
         if [ ! -f /usr/$triple/bin/$(basename $bin | sed "s/$triple-//") ]; then                  \
           ln -s $bin /usr/$triple/bin/$(basename $bin | sed "s/$triple-//");                      \
+        fi;                                                                                       \
+      done;                                                                                       \
+      for bin in /usr/bin/$triple-*; do                                                           \
+        if [ ! -f /usr/$triple/bin/cc ]; then                                                     \
+          ln -s gcc /usr/$triple/bin/cc;                                                          \
         fi;                                                                                       \
       done;                                                                                       \
     done &&                                                                                       \
@@ -125,6 +132,7 @@ RUN for triple in $(echo ${LINUX_TRIPLES} | tr "," " "); do                     
 # we need to use default clang binary to avoid a bug in osxcross that recursively call himself
 # with more and more parameters
 
+ENV LD_LIBRARY_PATH /usr/osxcross/lib:$LD_LIBRARY_PATH
 
 # Image metadata
 ENTRYPOINT ["/usr/bin/crossbuild"]
