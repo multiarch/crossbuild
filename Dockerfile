@@ -139,3 +139,6 @@ ENTRYPOINT ["/usr/bin/crossbuild"]
 CMD ["/bin/bash"]
 WORKDIR /workdir
 COPY ./assets/crossbuild /usr/bin/crossbuild
+
+# Ensure that the line endings of the entrypoint script are correct to avoid problems when building on Windows
+RUN apt-get install -y dos2unix && dos2unix /usr/bin/crossbuild && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
