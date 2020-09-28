@@ -21,6 +21,7 @@ RUN set -x; echo "Starting image build for Debian Stretch" \
         binutils-multiarch                             \
         binutils-multiarch-dev                         \
         build-essential                                \
+        ccache                                         \
         clang                                          \
         crossbuild-essential-arm64                     \
         crossbuild-essential-armel                     \
