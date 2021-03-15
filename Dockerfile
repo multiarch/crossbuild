@@ -87,6 +87,7 @@ RUN mkdir -p "/tmp/osxcross"                                                    
  && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/omp                                                    \
  && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/osxcross-macports                                      \
  && ln -sf ../tools/osxcross-macports /usr/osxcross/bin/osxcross-mp                                            \
+ && sed -i -e "s%exec cmake%exec /usr/bin/cmake%" /usr/osxcross/bin/osxcross-cmake                             \
  && rm -rf /tmp/osxcross                                                                                       \
  && rm -rf "/usr/osxcross/SDK/MacOSX${DARWIN_SDK_VERSION}.sdk/usr/share/man"
 
