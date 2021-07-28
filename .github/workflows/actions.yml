@@ -1,0 +1,25 @@
+name: actions
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  crossbuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set variables
+        run: |
+          echo "DOCKER_REPO=docker.io/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+      - name: Build
+        run: docker build -t ${{ env.DOCKER_REPO }} .
+      - name: Test
+        run: ./test.sh -d "${{ env.DOCKER_REPO }}"
+      - name: Publish
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+          docker push ${{ env.DOCKER_REPO }}
