@@ -1,7 +1,7 @@
 # crossbuild
 :earth_africa: multiarch cross compiling environments
 
-[![Build Status](https://travis-ci.org/multiarch/crossbuild.svg?branch=master)](https://travis-ci.org/multiarch/crossbuild)
+[![actions](https://github.com/multiarch/crossbuild/actions/workflows/actions.yml/badge.svg)](https://github.com/multiarch/crossbuild/actions/workflows/actions.yml)
 
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
