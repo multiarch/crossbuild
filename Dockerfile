@@ -1,8 +1,6 @@
 FROM buildpack-deps:focal-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
-RUN dpkg --print-foreign-architectures
-
 # Install deps
 RUN set -x                                             \
  && dpkg --add-architecture arm64                      \
