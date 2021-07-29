@@ -22,10 +22,11 @@ RUN set -x                                             \
         ccache                                         \
         clang                                          \
         crossbuild-essential-arm64                     \
-        crossbuild-essential-armel                     \
         crossbuild-essential-armhf                     \
+        crossbuild-essential-i386                      \
         crossbuild-essential-mipsel                    \
         crossbuild-essential-ppc64el                   \
+        crossbuild-essential-s390x                     \
         curl                                           \
         devscripts                                     \
         gdb                                            \
