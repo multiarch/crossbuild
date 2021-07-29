@@ -4,7 +4,7 @@ MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 RUN set -x \
   && apt-get update \
   && apt-get install -y -q  software-properties-common \
-  && add-apt-repository 'deb [arch=amd64,arm64,armhf,i386,mipsel,ppc64el,s390x] http://archive.ubuntu.com/ubuntu focal main universe multiverse restricted'
+  && add-apt-repository 'deb [arch=amd64,arm64,armhf,i386,mipsel,ppc64el] http://archive.ubuntu.com/ubuntu focal main universe multiverse restricted'
 
 # Install deps
 RUN set -x                                             \
@@ -13,7 +13,6 @@ RUN set -x                                             \
  && dpkg --add-architecture i386                       \
  && dpkg --add-architecture mipsel                     \
  && dpkg --add-architecture ppc64el                    \
- && dpkg --add-architecture s390x                      \
  && apt-get update                                     \
  && apt-get install -y -q                              \
         autoconf                                       \
@@ -31,7 +30,6 @@ RUN set -x                                             \
         crossbuild-essential-i386                      \
         crossbuild-essential-mipsel                    \
         crossbuild-essential-ppc64el                   \
-        crossbuild-essential-s390x                     \
         curl                                           \
         devscripts                                     \
         gdb                                            \
