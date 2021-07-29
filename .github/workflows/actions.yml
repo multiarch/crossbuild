@@ -16,7 +16,7 @@ jobs:
           echo "DOCKER_REPO=docker.io/$GITHUB_REPOSITORY" >> $GITHUB_ENV
       - name: Build
         run: |
-          dpkg --print-foreign-architectures
+          echo $(dpkg --print-foreign-architectures)
           docker build -t ${{ env.DOCKER_REPO }} .
       - name: Test
         run: ./test.sh -d "${{ env.DOCKER_REPO }}"
