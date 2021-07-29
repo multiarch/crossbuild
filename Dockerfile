@@ -1,6 +1,8 @@
 FROM buildpack-deps:focal-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
+RUN add-apt-repository 'deb [arch=amd64,arm64,armhf,i386,mipsel,ppc64el,s390x] http://archive.ubuntu.com/ubuntu focal main universe multiverse restricted'
+
 # Install deps
 RUN set -x                                             \
  && dpkg --add-architecture arm64                      \
