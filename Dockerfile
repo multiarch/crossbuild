@@ -2,7 +2,7 @@ FROM buildpack-deps:focal-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
-RUN set -x;                                            \
+RUN set -x                                             \
  && dpkg --add-architecture arm64                      \
  && dpkg --add-architecture armhf                      \
  && dpkg --add-architecture i386                       \
