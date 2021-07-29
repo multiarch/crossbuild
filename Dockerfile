@@ -1,16 +1,15 @@
-FROM buildpack-deps:stretch-curl
+FROM buildpack-deps:focal-curl
 MAINTAINER Manfred Touron <m@42.am> (https://github.com/moul)
 
 # Install deps
-RUN set -x; echo "Starting image build for Debian Stretch" \
+RUN set -x;                                            \
  && dpkg --add-architecture arm64                      \
- && dpkg --add-architecture armel                      \
  && dpkg --add-architecture armhf                      \
  && dpkg --add-architecture i386                       \
- && dpkg --add-architecture mips                       \
  && dpkg --add-architecture mipsel                     \
- && dpkg --add-architecture powerpc                    \
  && dpkg --add-architecture ppc64el                    \
+ && dpkg --add-architecture riscv64                    \
+ && dpkg --add-architecture s390x                      \
  && apt-get update                                     \
  && apt-get install -y -q                              \
         autoconf                                       \
