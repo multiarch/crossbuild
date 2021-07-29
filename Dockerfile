@@ -8,7 +8,6 @@ RUN set -x                                             \
  && dpkg --add-architecture i386                       \
  && dpkg --add-architecture mipsel                     \
  && dpkg --add-architecture ppc64el                    \
- && dpkg --add-architecture riscv64                    \
  && dpkg --add-architecture s390x                      \
  && apt-get update                                     \
  && apt-get install -y -q                              \
